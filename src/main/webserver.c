@@ -90,7 +90,7 @@ cam_feed_handler(struct mg_connection* nc, int ev, void* ev_data)
     return;
   }
 
-  LOGI(TAG, "cam feed event: %p\n", nc);
+  // LOGI(TAG, "cam feed event: %p\n", nc);
   cam_feed_response_frame(nc, frame);
 }
 
