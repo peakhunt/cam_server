@@ -50,7 +50,11 @@ ev_handler(struct mg_connection* nc, int ev, void* ev_data)
   switch(ev)
   {
   case MG_EV_HTTP_REQUEST:
-    if(mg_vcmp(&hm->uri, "/cam_feed.mjpg") == 0)
+    if(mg_vcmp(&hm->uri, "/") == 0)
+    {
+      mg_http_send_redirect(nc, 302, mg_mk_str("/index.html"), mg_mk_str(NULL));
+    }
+    else if(mg_vcmp(&hm->uri, "/cam_feed.mjpg") == 0)
     {
       cam_feed_response_begin(nc);
     }
