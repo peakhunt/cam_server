@@ -5,6 +5,7 @@
 #include "cli.h"
 #include "io_driver.h"
 #include "webserver.h"
+#include "camera_driver.h"
 
 #define CONFIG_TELNET_PORT        11050
 
@@ -21,9 +22,15 @@ static cli_command_t    _app_commands[] =
 };
 
 io_driver_t*
-cli_io_driver(void)
+main_io_driver(void)
 {
   return &_io_driver;
+}
+
+io_driver_t*
+cli_io_driver(void)
+{
+  return main_io_driver();
 }
 
 static void
@@ -35,10 +42,14 @@ cli_command_cam_feed(cli_intf_t* intf, int argc, const char** argv)
 int
 main(int argc, char** argv)
 {
+  camera_driver_init();
+
   webserver_init();
   io_driver_init(&_io_driver);
   
   cli_init(_app_commands, NARRAY(_app_commands), CONFIG_TELNET_PORT);
+
+  camera_driver_start();
   
   while(1)
   {
