@@ -75,7 +75,7 @@ alloc_cli_connection(cli_server_t* server, int newsd)
   conn = malloc(sizeof(cli_connection_t));
   if(conn == NULL)
   {
-    LOGI(TAG, "malloc failed");
+    LOGE(TAG, "malloc failed\n");
     close(newsd);
     return;
   }
@@ -175,12 +175,12 @@ handle_stream_event(stream_t* stream, stream_event_t evt)
     break;
 
   case stream_event_eof:
-    LOGI(TAG, "connection eof detected");
+    LOGI(TAG, "connection eof detected\n");
     dealloc_cli_connection(conn);
     break;
 
   case stream_event_err:
-    LOGI(TAG, "connection error detected");
+    LOGI(TAG, "connection error detected\n");
     dealloc_cli_connection(conn);
     break;
 
@@ -199,7 +199,7 @@ static void
 cli_server_new_connection(tcp_server_t* server, int newsd, struct sockaddr* from)
 {
   cli_server_t* cli_server = container_of(server, cli_server_t, tcp_server);
-  LOGI(TAG, "new cli connection");
+  LOGI(TAG, "new cli connection\n");
   alloc_cli_connection(cli_server, newsd);
 }
 
@@ -226,7 +226,7 @@ void cli_telnet_server_init(cli_server_t* server,  int port, int backlog)
 void
 cli_telnet_intf_init(int port)
 {
-  LOGI(TAG, "initializing cli telnet interface for port %d", port);
+  LOGI(TAG, "initializing cli telnet interface for port %d\n", port);
 
   cli_telnet_server_init(&_cli_ipv4_server, port, 5);
 }

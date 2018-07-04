@@ -32,7 +32,7 @@ typedef uint8_t bool;
 #define MIN(a,b)      (a < b ? a : b)
 #define MAX(a,b)      (a > b ? a : b)
 
-#define LOGI(tag, str, ...)       (void)(tag);
-#define LOGE(tag, str, ...)       (void)(tag);
+#define LOGI(tag, str, ...)       printf("%s:"str, tag, ##__VA_ARGS__)
+#define LOGE(tag, str, ...)       printf("%s:"str, tag, ##__VA_ARGS__)
 
 #endif /* !__COMMON_DEF_H__ */

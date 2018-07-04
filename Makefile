@@ -21,7 +21,8 @@ src/mongoose/mongoose_util.c                        \
 src/mongoose/frozen.c
 
 APP_SOURCES =                                       \
-src/main/main.c
+src/main/main.c                                     \
+src/main/webserver.c
 
 #######################################
 C_DEFS  = 
