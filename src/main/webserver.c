@@ -165,7 +165,7 @@ camera_frame_event(uint8_t* buf, size_t length)
 void
 webserver_init(void)
 {
-  static completion_t bootup_complete;
+  completion_t bootup_complete;
 
 #ifdef RPI
   wiringPiSetup();
