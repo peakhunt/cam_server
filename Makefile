@@ -95,6 +95,10 @@ $(BUILD_DIR)/$(TARGET): $(OBJECTS) Makefile
 	@echo "[LD]         $@"
 	$Q$(CC) $(OBJECTS) $(LDFLAGS) -o $@
 
+$(BUILD_DIR)/$(TARGET)_rpi: $(OBJECTS) Makefile
+	@echo "[LD]         $@"
+	$Q$(CC) $(OBJECTS) $(LDFLAGS) -lwiringPi -o $@
+
 $(BUILD_DIR):
 	@echo "MKDIR          $(BUILD_DIR)"
 	$Qmkdir $@

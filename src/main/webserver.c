@@ -4,6 +4,16 @@
 #include "completion.h"
 #include "camera_driver.h"
 
+#define RPI 1
+
+#ifdef RPI
+#include <wiringPi.h>
+
+#define LED_PIN   0
+
+static uint32_t     _cam_conns = 0;
+#endif
+
 typedef struct
 {
   uint8_t*    buf;
@@ -58,12 +68,31 @@ ev_handler(struct mg_connection* nc, int ev, void* ev_data)
     {
       nc->flags |= MG_F_USER_6;
       cam_feed_response_begin(nc);
+#ifdef RPI
+      LOGI(TAG, "LED ON\n");
+      _cam_conns++;
+      digitalWrite(LED_PIN, HIGH);
+#endif
     }
     else
     {
       mg_serve_http(nc, hm, s_http_server_opts);
     }
     break;
+
+#ifdef RPI
+  case MG_EV_CLOSE:
+    if(nc->flags & MG_F_USER_6)
+    {
+      _cam_conns--;
+      if(_cam_conns == 0)
+      {
+        LOGI(TAG, "LED OFF\n");
+        digitalWrite(LED_PIN, LOW);
+      }
+    }
+    break;
+#endif
 
   default:
     break;
@@ -137,6 +166,11 @@ void
 webserver_init(void)
 {
   static completion_t bootup_complete;
+
+#ifdef RPI
+  wiringPiSetup();
+  pinMode(LED_PIN, OUTPUT);
+#endif
 
   completion_init(&bootup_complete);
 
