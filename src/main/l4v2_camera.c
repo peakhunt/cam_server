@@ -87,7 +87,7 @@ l4v2_camera_set_request_buffers(l4v2_camera_t* cam)
     cam->buffers[i].start = mmap(NULL, buf.length, PROT_READ | PROT_WRITE, MAP_SHARED, cam->fd, buf.m.offset);
     if(cam->buffers[i].start == MAP_FAILED)
     {
-      LOGE(TAG, "mmap failed: %ld\n", i);
+      LOGE(TAG, "mmap failed: %zd\n", i);
       return -1;
     }
   }
@@ -210,7 +210,7 @@ l4v2_camera_start(l4v2_camera_t* cam)
     
     if(ioctl(cam->fd, VIDIOC_QBUF, &buf) == -1)
     {
-      LOGE(TAG, "VIDIOC_QBUF failed %ld\n", i);
+      LOGE(TAG, "VIDIOC_QBUF failed %zd\n", i);
       return -1;
     }
   }

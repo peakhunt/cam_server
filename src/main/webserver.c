@@ -38,7 +38,7 @@ cam_feed_response_frame(struct mg_connection* nc, camera_frame_t* frame)
   mg_printf(nc, "%s",
       "--FRAME\r\n"
       "Content-Type: image/jpeg\r\n");
-  mg_printf(nc, "Content-Length: %ld\r\n\r\n", frame->len);
+  mg_printf(nc, "Content-Length: %zd\r\n\r\n", frame->len);
   mg_send(nc, frame->buf, frame->len);
 }
 
