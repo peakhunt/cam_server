@@ -56,6 +56,7 @@ ev_handler(struct mg_connection* nc, int ev, void* ev_data)
     }
     else if(mg_vcmp(&hm->uri, "/cam_feed.mjpg") == 0)
     {
+      nc->flags |= MG_F_USER_6;
       cam_feed_response_begin(nc);
     }
     else
@@ -84,7 +85,12 @@ cam_feed_handler(struct mg_connection* nc, int ev, void* ev_data)
     return;
   }
 
-  LOGI(TAG, "cam feed event: %ld\n", frame->len);
+  if((nc->flags & MG_F_USER_6) == 0)
+  {
+    return;
+  }
+
+  LOGI(TAG, "cam feed event: %p\n", nc);
   cam_feed_response_frame(nc, frame);
 }
 
