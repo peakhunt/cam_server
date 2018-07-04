@@ -72,7 +72,7 @@ LDFLAGS +=  $(LIBDIR) $(LIBS)
 #######################################
 # build target
 #######################################
-all: $(BUILD_DIR)/$(TARGET) $(BUILD_DIR)/$(MIGRATION)
+all: $(BUILD_DIR)/$(TARGET)
 
 #######################################
 # target source setup
