@@ -2,6 +2,13 @@
 #include "common_def.h"
 #include "mongoose.h"
 #include "completion.h"
+#include "camera_driver.h"
+
+typedef struct
+{
+  uint8_t*    buf;
+  size_t      len;
+} camera_frame_t;
 
 struct mg_mgr                     _mongoose_mgr;
 static pthread_t                  _webserver_thread;
@@ -14,6 +21,8 @@ static struct mg_connection*      _server_conn;
 
 const static char*    TAG = "WEB";
 
+static camera_driver_listener_t   _cam_listener;
+
 static void
 cam_feed_response_begin(struct mg_connection* nc)
 {
@@ -24,13 +33,13 @@ cam_feed_response_begin(struct mg_connection* nc)
 }
 
 static void
-cam_feed_response_frame(struct mg_connection* nc)
+cam_feed_response_frame(struct mg_connection* nc, camera_frame_t* frame)
 {
-  // FIXME
   mg_printf(nc, "%s",
       "--FRAME\r\n"
-      "Content-Type: image/jpeg\r\n"
-      "Content-Length: 0\r\n\r\n");
+      "Content-Type: image/jpeg\r\n");
+  mg_printf(nc, "Content-Length: %ld\r\n\r\n", frame->len);
+  mg_send(nc, frame->buf, frame->len);
 }
 
 static void
@@ -41,7 +50,7 @@ ev_handler(struct mg_connection* nc, int ev, void* ev_data)
   switch(ev)
   {
   case MG_EV_HTTP_REQUEST:
-    if(mg_vcmp(&hm->uri, "/cam_feed") == 0)
+    if(mg_vcmp(&hm->uri, "/cam_feed.mjpg") == 0)
     {
       cam_feed_response_begin(nc);
     }
@@ -59,7 +68,7 @@ ev_handler(struct mg_connection* nc, int ev, void* ev_data)
 static void
 cam_feed_handler(struct mg_connection* nc, int ev, void* ev_data)
 {
-  int* p = (int*)ev_data;
+  camera_frame_t*   frame = (camera_frame_t*)ev_data;
   
   if(ev != MG_EV_POLL)
   {
@@ -71,8 +80,8 @@ cam_feed_handler(struct mg_connection* nc, int ev, void* ev_data)
     return;
   }
 
-  LOGI(TAG, "cam feed event: %d\n", *p);
-  cam_feed_response_frame(nc);
+  LOGI(TAG, "cam feed event: %ld\n", frame->len);
+  cam_feed_response_frame(nc, frame);
 }
 
 
@@ -103,6 +112,17 @@ __webserver_thread(void* arg)
   mg_mgr_free(&_mongoose_mgr);
 }
 
+static void
+camera_frame_event(uint8_t* buf, size_t length)
+{
+  camera_frame_t    frame;
+
+  frame.buf = buf;
+  frame.len = length;
+
+  mg_broadcast(&_mongoose_mgr, cam_feed_handler, &frame, sizeof(frame));
+}
+
 void
 webserver_init(void)
 {
@@ -110,17 +130,22 @@ webserver_init(void)
 
   completion_init(&bootup_complete);
 
+  _cam_listener.cb = camera_frame_event;
+  camera_driver_listen(&_cam_listener);
+
   pthread_create(&_webserver_thread, NULL, __webserver_thread, &bootup_complete);
 
   completion_wait(&bootup_complete);
   completion_deinit(&bootup_complete);
 }
 
-static int c = 1;
-
 void
 webserver_feed_cam_data(void)
 {
+#if 0
+  static int c = 1;
+
   c++;
   mg_broadcast(&_mongoose_mgr, cam_feed_handler, &c, sizeof(c));
+#endif
 }
