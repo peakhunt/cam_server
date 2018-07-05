@@ -23,7 +23,7 @@ src/mongoose/frozen.c
 APP_SOURCES =                                       \
 src/main/main.c                                     \
 src/main/webserver.c                                \
-src/main/l4v2_camera.c                              \
+src/main/v4l2_camera.c                              \
 src/main/camera_driver.c
 
 #######################################

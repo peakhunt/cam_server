@@ -14,12 +14,12 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include "l4v2_camera.h"
+#include "v4l2_camera.h"
 
-const char* TAG = "l4v2_camera";
+const char* TAG = "v4l2_camera";
 
 static int
-l4v2_camera_set_format(l4v2_camera_t* cam)
+v4l2_camera_set_format(v4l2_camera_t* cam)
 {
   struct v4l2_format format;
 
@@ -39,7 +39,7 @@ l4v2_camera_set_format(l4v2_camera_t* cam)
 }
 
 static int
-l4v2_camera_set_request_buffers(l4v2_camera_t* cam)
+v4l2_camera_set_request_buffers(v4l2_camera_t* cam)
 {
   struct v4l2_requestbuffers req;
 
@@ -54,7 +54,7 @@ l4v2_camera_set_request_buffers(l4v2_camera_t* cam)
     LOGE(TAG, "VIDIOC_REQBUFS, failed\n");
     return -1;
   }
-  cam->buffers = calloc(req.count, sizeof (l4v2_camera_buffer_t));
+  cam->buffers = calloc(req.count, sizeof (v4l2_camera_buffer_t));
 
   size_t buf_max = 0;
 
@@ -96,7 +96,7 @@ l4v2_camera_set_request_buffers(l4v2_camera_t* cam)
 }
 
 static int
-l4v2_camera_init(l4v2_camera_t* cam)
+v4l2_camera_init(v4l2_camera_t* cam)
 {
   struct v4l2_capability cap;
   struct v4l2_cropcap cropcap;
@@ -131,8 +131,8 @@ l4v2_camera_init(l4v2_camera_t* cam)
     }
   }
 
-  if(l4v2_camera_set_format(cam) != 0 ||
-     l4v2_camera_set_request_buffers(cam) != 0)
+  if(v4l2_camera_set_format(cam) != 0 ||
+     v4l2_camera_set_request_buffers(cam) != 0)
   {
     return -1;
   }
@@ -141,7 +141,7 @@ l4v2_camera_init(l4v2_camera_t* cam)
 }
 
 int
-l4v2_camera_open(l4v2_camera_t* cam, const char* device, uint32_t width, uint32_t height, size_t buffer_count)
+v4l2_camera_open(v4l2_camera_t* cam, const char* device, uint32_t width, uint32_t height, size_t buffer_count)
 {
   int   fd;
 
@@ -160,16 +160,16 @@ l4v2_camera_open(l4v2_camera_t* cam, const char* device, uint32_t width, uint32_
   cam->head.length  = 0;
   cam->head.start   = NULL;
 
-  if(l4v2_camera_init(cam) != 0)
+  if(v4l2_camera_init(cam) != 0)
   {
-    l4v2_camera_close(cam);
+    v4l2_camera_close(cam);
     return -1;
   }
   return 0;
 }
 
 void
-l4v2_camera_close(l4v2_camera_t* cam)
+v4l2_camera_close(v4l2_camera_t* cam)
 {
   if(cam->buffers != NULL)
   {
@@ -197,7 +197,7 @@ l4v2_camera_close(l4v2_camera_t* cam)
 }
 
 int
-l4v2_camera_start(l4v2_camera_t* cam)
+v4l2_camera_start(v4l2_camera_t* cam)
 {
   for(size_t i = 0; i < cam->buffer_count; i++)
   {
@@ -226,7 +226,7 @@ l4v2_camera_start(l4v2_camera_t* cam)
 }
 
 int
-l4v2_camera_stop(l4v2_camera_t* cam)
+v4l2_camera_stop(v4l2_camera_t* cam)
 {
   enum v4l2_buf_type type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
 
@@ -239,7 +239,7 @@ l4v2_camera_stop(l4v2_camera_t* cam)
 }
 
 int
-l4v2_camera_capture(l4v2_camera_t* cam)
+v4l2_camera_capture(v4l2_camera_t* cam)
 {
   struct v4l2_buffer buf;
 
