@@ -63,3 +63,15 @@ camera_driver_listen(camera_driver_listener_t* listener)
   INIT_LIST_HEAD(&listener->le);
   list_add_tail(&listener->le, &_listeners);
 }
+
+int
+camera_driver_get_brightness(void)
+{
+  return v4l2_camera_get_brightness(&_cam);
+}
+
+void
+camera_driver_set_brightness(int v)
+{
+  v4l2_camera_set_brightness(&_cam, v);
+}

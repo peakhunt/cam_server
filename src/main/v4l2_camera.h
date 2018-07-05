@@ -25,4 +25,8 @@ extern int v4l2_camera_start(v4l2_camera_t* cam);
 extern int v4l2_camera_stop(v4l2_camera_t* cam);
 extern int v4l2_camera_capture(v4l2_camera_t* cam);
 
+extern int v4l2_camera_get_brightness(v4l2_camera_t* cam);
+extern int v4l2_camera_set_brightness(v4l2_camera_t* cam, int v);
+
+
 #endif /* !__V4L2_CAMERA_DEF_H__ */

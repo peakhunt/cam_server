@@ -17,4 +17,7 @@ extern void camera_driver_start(void);
 extern void camera_driver_stop(void);
 extern void camera_driver_listen(camera_driver_listener_t* listener);
 
+extern int camera_driver_get_brightness(void);
+extern void camera_driver_set_brightness(int v);
+
 #endif /* !__CAMERA_DRIVER_H__ */
