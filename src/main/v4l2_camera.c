@@ -299,3 +299,101 @@ v4l2_camera_set_brightness(v4l2_camera_t* cam, int v)
   return 0;
 }
 
+int
+v4l2_camera_get_saturation(v4l2_camera_t* cam)
+{
+  struct v4l2_control control;
+
+  memset(&control, 0, sizeof(control));
+  control.id = V4L2_CID_SATURATION;
+
+  if(ioctl(cam->fd, VIDIOC_G_CTRL, &control) != 0)
+  {
+    LOGE(TAG, "v4l2_camera_get_saturation failed\n");
+    return -1;
+  }
+  return control.value;
+}
+
+int
+v4l2_camera_set_saturation(v4l2_camera_t* cam, int v)
+{
+  struct v4l2_control control;
+
+  memset(&control, 0, sizeof(control));
+  control.id = V4L2_CID_SATURATION;
+  control.value = v;
+
+  if(ioctl(cam->fd, VIDIOC_S_CTRL, &control) != 0)
+  {
+    LOGE(TAG, "v4l2_camera_set_saturation failed\n");
+    return -1;
+  }
+  return 0;
+}
+
+int
+v4l2_camera_get_hue(v4l2_camera_t* cam)
+{
+  struct v4l2_control control;
+
+  memset(&control, 0, sizeof(control));
+  control.id = V4L2_CID_HUE;
+
+  if(ioctl(cam->fd, VIDIOC_G_CTRL, &control) != 0)
+  {
+    LOGE(TAG, "v4l2_camera_get_hue failed\n");
+    return -1;
+  }
+  return control.value;
+}
+
+int
+v4l2_camera_set_hue(v4l2_camera_t* cam, int v)
+{
+  struct v4l2_control control;
+
+  memset(&control, 0, sizeof(control));
+  control.id = V4L2_CID_HUE;
+  control.value = v;
+
+  if(ioctl(cam->fd, VIDIOC_S_CTRL, &control) != 0)
+  {
+    LOGE(TAG, "v4l2_camera_set_hue failed\n");
+    return -1;
+  }
+  return 0;
+}
+
+int
+v4l2_camera_get_exposure(v4l2_camera_t* cam)
+{
+  struct v4l2_control control;
+
+  memset(&control, 0, sizeof(control));
+  control.id = V4L2_CID_EXPOSURE;
+
+  if(ioctl(cam->fd, VIDIOC_G_CTRL, &control) != 0)
+  {
+    LOGE(TAG, "v4l2_camera_get_exposure failed\n");
+    return -1;
+  }
+  return control.value;
+}
+
+int
+v4l2_camera_set_exposure(v4l2_camera_t* cam, int v)
+{
+  struct v4l2_control control;
+
+  memset(&control, 0, sizeof(control));
+  control.id = V4L2_CID_HUE;
+  control.value = v;
+
+  if(ioctl(cam->fd, VIDIOC_S_CTRL, &control) != 0)
+  {
+    LOGE(TAG, "v4l2_camera_set_exposure failed\n");
+    return -1;
+  }
+  return 0;
+}
