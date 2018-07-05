@@ -123,3 +123,63 @@ camera_driver_set_hflip(int v)
 {
   v4l2_camera_set_hflip(&_cam, v);
 }
+
+int
+camera_driver_get_control(camera_control_t c)
+{
+  int ret = -1;
+
+  switch(c)
+  {
+  case CAMERA_CONTROL_BRIGHTNESS:
+    ret = v4l2_camera_get_brightness(&_cam);
+    break;
+
+  case CAMERA_CONTROL_SATURATION:
+    ret = v4l2_camera_get_saturation(&_cam);
+    break;
+
+  case CAMERA_CONTROL_HUE:
+    ret = v4l2_camera_get_hue(&_cam);
+    break;
+
+  case CAMERA_CONTROL_EXPOSURE:
+    ret = v4l2_camera_get_exposure(&_cam);
+    break;
+
+  case CAMERA_CONTROL_HFLIP:
+    ret = v4l2_camera_get_hflip(&_cam);
+    break;
+  }
+  return ret;
+}
+
+int
+camera_driver_set_control(camera_control_t c, int v)
+{
+  int ret = -1;
+
+  switch(c)
+  {
+  case CAMERA_CONTROL_BRIGHTNESS:
+    ret = v4l2_camera_set_brightness(&_cam, v);
+    break;
+
+  case CAMERA_CONTROL_SATURATION:
+    ret = v4l2_camera_set_saturation(&_cam, v);
+    break;
+
+  case CAMERA_CONTROL_HUE:
+    ret = v4l2_camera_set_hue(&_cam, v);
+    break;
+
+  case CAMERA_CONTROL_EXPOSURE:
+    ret = v4l2_camera_set_exposure(&_cam, v);
+    break;
+
+  case CAMERA_CONTROL_HFLIP:
+    ret = v4l2_camera_set_hflip(&_cam, v);
+    break;
+  }
+  return ret;
+}
