@@ -15,6 +15,7 @@ static void cli_command_cam_brightness(cli_intf_t* intf, int argc, const char** 
 static void cli_command_cam_saturation(cli_intf_t* intf, int argc, const char** argv);
 static void cli_command_cam_hue(cli_intf_t* intf, int argc, const char** argv);
 static void cli_command_cam_exposure(cli_intf_t* intf, int argc, const char** argv);
+static void cli_command_cam_hflip(cli_intf_t* intf, int argc, const char** argv);
 
 static io_driver_t      _io_driver;
 static cli_command_t    _app_commands[] =
@@ -43,7 +44,12 @@ static cli_command_t    _app_commands[] =
     "exposure",
     "camera exposure command",
     cli_command_cam_exposure,
-  }
+  },
+  {
+    "hflip",
+    "camera hflip command",
+    cli_command_cam_hflip,
+  },
 };
 
 io_driver_t*
@@ -194,6 +200,31 @@ error:
   cli_printf(intf, "invalid syntax"CLI_EOL);
   cli_printf(intf, "exposure get"CLI_EOL);
   cli_printf(intf, "exposure set <value>"CLI_EOL);
+}
+
+static void
+cli_command_cam_hflip(cli_intf_t* intf, int argc, const char** argv)
+{
+  if (argc != 2)
+    goto error;
+
+  if(strcmp(argv[1], "off") == 0)
+  {
+    camera_driver_set_hflip(0);
+  }
+  else if(strcmp(argv[1], "on") == 0)
+  {
+    camera_driver_set_hflip(1);
+  }
+  else
+  {
+    goto error;
+  }
+  return;
+
+error:
+  cli_printf(intf, "invalid syntax"CLI_EOL);
+  cli_printf(intf, "hflip [on|off]"CLI_EOL);
 }
 
 int

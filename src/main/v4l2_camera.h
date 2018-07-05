@@ -33,6 +33,7 @@ extern int v4l2_camera_get_hue(v4l2_camera_t* cam);
 extern int v4l2_camera_set_hue(v4l2_camera_t* cam, int v);
 extern int v4l2_camera_get_exposure(v4l2_camera_t* cam);
 extern int v4l2_camera_set_exposure(v4l2_camera_t* cam, int v);
-
+extern int v4l2_camera_get_hflip(v4l2_camera_t* cam);
+extern int v4l2_camera_set_hflip(v4l2_camera_t* cam, int v);
 
 #endif /* !__V4L2_CAMERA_DEF_H__ */

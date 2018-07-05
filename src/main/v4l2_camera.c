@@ -397,3 +397,36 @@ v4l2_camera_set_exposure(v4l2_camera_t* cam, int v)
   }
   return 0;
 }
+
+int
+v4l2_camera_get_hflip(v4l2_camera_t* cam)
+{
+  struct v4l2_control control;
+
+  memset(&control, 0, sizeof(control));
+  control.id = V4L2_CID_HFLIP;
+
+  if(ioctl(cam->fd, VIDIOC_G_CTRL, &control) != 0)
+  {
+    LOGE(TAG, "v4l2_camera_get_hflip failed\n");
+    return -1;
+  }
+  return control.value;
+}
+
+int
+v4l2_camera_set_hflip(v4l2_camera_t* cam, int v)
+{
+  struct v4l2_control control;
+
+  memset(&control, 0, sizeof(control));
+  control.id = V4L2_CID_HFLIP;
+  control.value = v;
+
+  if(ioctl(cam->fd, VIDIOC_S_CTRL, &control) != 0)
+  {
+    LOGE(TAG, "v4l2_camera_set_hflip failed\n");
+    return -1;
+  }
+  return 0;
+}

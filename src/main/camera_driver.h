@@ -25,5 +25,7 @@ extern int camera_driver_get_hue(void);
 extern void camera_driver_set_hue(int v);
 extern int camera_driver_get_exposure(void);
 extern void camera_driver_set_exposure(int v);
+extern int camera_driver_get_hflip(void);
+extern void camera_driver_set_hflip(int v);
 
 #endif /* !__CAMERA_DRIVER_H__ */

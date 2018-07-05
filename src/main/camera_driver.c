@@ -111,3 +111,15 @@ camera_driver_set_exposure(int v)
 {
   v4l2_camera_set_exposure(&_cam, v);
 }
+
+int
+camera_driver_get_hflip(void)
+{
+  return v4l2_camera_get_hflip(&_cam);
+}
+
+void
+camera_driver_set_hflip(int v)
+{
+  v4l2_camera_set_hflip(&_cam, v);
+}
