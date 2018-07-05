@@ -29,15 +29,4 @@ typedef enum
 extern int camera_driver_get_control(camera_control_t c);
 extern int camera_driver_set_control(camera_control_t c, int v);
 
-extern int camera_driver_get_brightness(void);
-extern void camera_driver_set_brightness(int v);
-extern int camera_driver_get_saturation(void);
-extern void camera_driver_set_saturation(int v);
-extern int camera_driver_get_hue(void);
-extern void camera_driver_set_hue(int v);
-extern int camera_driver_get_exposure(void);
-extern void camera_driver_set_exposure(int v);
-extern int camera_driver_get_hflip(void);
-extern void camera_driver_set_hflip(int v);
-
 #endif /* !__CAMERA_DRIVER_H__ */

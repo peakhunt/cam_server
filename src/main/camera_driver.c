@@ -65,66 +65,6 @@ camera_driver_listen(camera_driver_listener_t* listener)
 }
 
 int
-camera_driver_get_brightness(void)
-{
-  return v4l2_camera_get_brightness(&_cam);
-}
-
-void
-camera_driver_set_brightness(int v)
-{
-  v4l2_camera_set_brightness(&_cam, v);
-}
-
-int
-camera_driver_get_saturation(void)
-{
-  return v4l2_camera_get_saturation(&_cam);
-}
-
-void
-camera_driver_set_saturation(int v)
-{
-  v4l2_camera_set_saturation(&_cam, v);
-}
-
-int
-camera_driver_get_hue(void)
-{
-  return v4l2_camera_get_hue(&_cam);
-}
-
-void
-camera_driver_set_hue(int v)
-{
-  v4l2_camera_set_hue(&_cam, v);
-}
-
-int
-camera_driver_get_exposure(void)
-{
-  return v4l2_camera_get_exposure(&_cam);
-}
-
-void
-camera_driver_set_exposure(int v)
-{
-  v4l2_camera_set_exposure(&_cam, v);
-}
-
-int
-camera_driver_get_hflip(void)
-{
-  return v4l2_camera_get_hflip(&_cam);
-}
-
-void
-camera_driver_set_hflip(int v)
-{
-  v4l2_camera_set_hflip(&_cam, v);
-}
-
-int
 camera_driver_get_control(camera_control_t c)
 {
   int ret = -1;
