@@ -37,7 +37,11 @@ C_INCLUDES =                              \
 -Isrc/main                                \
 -Isrc/mongoose
 
+ifeq ($(RPI),yes)
+LIBS = -ldl -lpthread -lm -lwiringPi
+else
 LIBS = -ldl -lpthread -lm
+endif
 LIBDIR = 
 
 #######################################
@@ -62,7 +66,11 @@ TARGET    = cam_server
 #######################################
 # compile & link flags
 #######################################
+ifeq ($(RPI),yes)
+CFLAGS += -g $(C_DEFS) $(C_INCLUDES) -DRPI
+else
 CFLAGS += -g $(C_DEFS) $(C_INCLUDES)
+endif
 
 # Generate dependency information
 CFLAGS += -MMD -MF .dep/$(*F).d

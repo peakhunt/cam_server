@@ -4,8 +4,6 @@
 #include "completion.h"
 #include "camera_driver.h"
 
-// #define RPI 1
-
 #ifdef RPI
 #include <wiringPi.h>
 
