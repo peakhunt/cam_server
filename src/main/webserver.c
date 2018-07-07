@@ -35,7 +35,9 @@ static void
 cam_feed_response_begin(struct mg_connection* nc)
 {
    mg_printf(nc, "%s",
-       "HTTP/1.0 200 OK\r\n" "Cache-Control: no-cache, private\r\n"
+       "HTTP/1.1 200 OK\r\n"
+       "Age: 0\r\n"
+       "Cache-Control: no-cache, private\r\n"
        "Pragma: no-cache\r\n"
        "Content-Type: multipart/x-mixed-replace; boundary=FRAME\r\n\r\n");
 }
@@ -43,11 +45,13 @@ cam_feed_response_begin(struct mg_connection* nc)
 static void
 cam_feed_response_frame(struct mg_connection* nc, camera_frame_t* frame)
 {
-  mg_printf(nc, "%s",
+  mg_printf(nc, 
       "--FRAME\r\n"
       "Content-Type: image/jpeg\r\n");
   mg_printf(nc, "Content-Length: %zd\r\n\r\n", frame->len);
   mg_send(nc, frame->buf, frame->len);
+  // LOGI(TAG, "%p sending: %zd bytes\n", nc, frame->len);
+  mg_printf(nc, "\r\n");
 }
 
 static void
@@ -60,7 +64,7 @@ ev_handler(struct mg_connection* nc, int ev, void* ev_data)
   case MG_EV_HTTP_REQUEST:
     if(mg_vcmp(&hm->uri, "/") == 0)
     {
-      mg_http_send_redirect(nc, 302, mg_mk_str("/index.html"), mg_mk_str(NULL));
+      mg_http_send_redirect(nc, 301, mg_mk_str("/index.html"), mg_mk_str(NULL));
     }
     else if(mg_vcmp(&hm->uri, "/cam_feed.mjpg") == 0)
     {

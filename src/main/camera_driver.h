@@ -29,4 +29,6 @@ typedef enum
 extern int camera_driver_get_control(camera_control_t c);
 extern int camera_driver_set_control(camera_control_t c, int v);
 
+extern int camera_driver_get_fps(void);
+
 #endif /* !__CAMERA_DRIVER_H__ */

@@ -38,6 +38,25 @@ v4l2_camera_set_format(v4l2_camera_t* cam)
   return 0;
 }
 
+static void
+v4l2_camera_set_frame_rate(v4l2_camera_t* cam, int rate)
+{
+  struct v4l2_streamparm parm;
+
+  parm.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+
+  parm.parm.capture.timeperframe.numerator = 1;
+  parm.parm.capture.timeperframe.denominator = rate;
+
+  int ret = ioctl(cam->fd, VIDIOC_S_PARM, &parm);
+
+  if (ret < 0)
+  {
+    LOGE(TAG, "failed to set frame rate\n");
+  }
+  LOGE(TAG, "frame rate set to %d\n", rate);
+}
+
 static int
 v4l2_camera_set_request_buffers(v4l2_camera_t* cam)
 {
@@ -165,6 +184,8 @@ v4l2_camera_open(v4l2_camera_t* cam, const char* device, uint32_t width, uint32_
     v4l2_camera_close(cam);
     return -1;
   }
+
+  v4l2_camera_set_frame_rate(cam, 24);
   return 0;
 }
 
