@@ -52,6 +52,8 @@ cam_feed_response_frame(struct mg_connection* nc, camera_frame_t* frame)
   mg_send(nc, frame->buf, frame->len);
   // LOGI(TAG, "%p sending: %zd bytes\n", nc, frame->len);
   mg_printf(nc, "\r\n");
+
+  nc->flags &= ~MG_F_USER_5;
 }
 
 static void
@@ -68,7 +70,7 @@ ev_handler(struct mg_connection* nc, int ev, void* ev_data)
     }
     else if(mg_vcmp(&hm->uri, "/cam_feed.mjpg") == 0)
     {
-      nc->flags |= MG_F_USER_6;
+      nc->flags |= (MG_F_USER_6 | MG_F_USER_5);
       cam_feed_response_begin(nc);
 #ifdef RPI
       LOGI(TAG, "LED ON\n");
@@ -96,6 +98,13 @@ ev_handler(struct mg_connection* nc, int ev, void* ev_data)
     break;
 #endif
 
+  case MG_EV_SEND:
+    if(nc->flags & MG_F_USER_6)
+    {
+      nc->flags |= MG_F_USER_5;
+    }
+    break;
+
   default:
     break;
   }
@@ -120,6 +129,14 @@ cam_feed_handler(struct mg_connection* nc, int ev, void* ev_data)
   {
     return;
   }
+
+#if 0
+  if((nc->flags & MG_F_USER_5) == 0)
+  {
+    // just skip if tx is still pending
+    return;
+  }
+#endif
 
   // LOGI(TAG, "cam feed event: %p\n", nc);
   cam_feed_response_frame(nc, frame);
