@@ -13,4 +13,5 @@ to build property
  make -j4
 
  on raspberyr PI, to use GPIO LED indication for connection status
+
  make RPI=yes -j4
