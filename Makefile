@@ -39,9 +39,9 @@ C_INCLUDES =                              \
 -Isrc/mongoose
 
 ifeq ($(RPI),yes)
-LIBS = -ldl -lpthread -lm -lwiringPi -lgd -ljpeg
+LIBS = -ldl -lpthread -lwiringPi -lgd -ljpeg -lfreetype -lm
 else
-LIBS = -ldl -lpthread -lm -lgd -ljpeg
+LIBS = -ldl -lpthread -lgd -ljpeg -lfreetype
 endif
 LIBDIR = 
 

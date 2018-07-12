@@ -26,6 +26,8 @@ static io_driver_watcher_t    _timerfd_watcher;
 static int _fps = 0;
 static int _fps_count = 0;
 
+uint32_t    _1sec_tick = 0;
+
 static void
 camera_capture_callback(io_driver_watcher_t* watcher, io_driver_event event)
 {
@@ -54,6 +56,7 @@ _1sec_elapsed_callback(io_driver_watcher_t* watcher, io_driver_event event)
 
   _fps = _fps_count;
   _fps_count = 0;
+  _1sec_tick++;
   // LOGI(TAG, "fps = %d\n", _fps);
 }
 
