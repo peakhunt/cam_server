@@ -4,7 +4,7 @@ Currently it supports live camera streaming via HTTP/MJPEG.
 The main purpose of this project is to demonstrate how to use camera on linux and show that it shouldn't be any complicated.
 
 ## prerequisites
-this S/W depends on libgd.
+this S/W depends on libgd for image processing.
 to build property
 
  sudo apt install libgd-dev
