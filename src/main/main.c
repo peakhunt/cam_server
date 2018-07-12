@@ -14,6 +14,7 @@
 static void cli_command_cam_feed(cli_intf_t* intf, int argc, const char** argv);
 static void cli_command_cam_control(cli_intf_t* intf, int argc, const char** argv);
 static void cli_command_fps(cli_intf_t* intf, int argc, const char** argv);
+static void cli_command_last_frame_size(cli_intf_t* intf, int argc, const char** argv);
 
 static io_driver_t      _io_driver;
 static cli_command_t    _app_commands[] =
@@ -32,6 +33,11 @@ static cli_command_t    _app_commands[] =
     "fps",
     "show fps",
     cli_command_fps,
+  },
+  {
+    "last_frame_size",
+    "show last frame size",
+    cli_command_last_frame_size,
   }
 };
 
@@ -123,6 +129,14 @@ static void
 cli_command_fps(cli_intf_t* intf, int argc, const char** argv)
 {
   cli_printf(intf, "fps: %d"CLI_EOL, camera_driver_get_fps());
+}
+
+static void
+cli_command_last_frame_size(cli_intf_t* intf, int argc, const char** argv)
+{
+  static uint32_t _last_frame_size;
+
+  cli_printf(intf, "last frame size: %d"CLI_EOL, _last_frame_size);
 }
 
 int

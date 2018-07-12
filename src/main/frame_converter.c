@@ -23,6 +23,7 @@ static uint32_t     _width,
 
 static frame_converter_buffer_t   _buffers[MAX_FRAME_CONVERTER_BUFFERS];
 static uint32_t _buffers_ndx = 0;
+uint32_t _last_frame_size = 0;
 
 static camera_driver_listener_t   _cam_listener;
 
@@ -143,6 +144,7 @@ frame_converter_convert_yuv422(uint8_t* yuv)
 
   memcpy(_buffers[_buffers_ndx].ptr, jpg_img, size);
   _buffers[_buffers_ndx].size = size;
+  _last_frame_size = size;
 
   gdFree(jpg_img);
 
