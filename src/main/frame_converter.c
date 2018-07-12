@@ -27,6 +27,7 @@ static camera_driver_listener_t   _cam_listener;
 
 static struct list_head       _listeners;
 
+#if 0
 static int
 convert_yuv_to_rgb_pixel(int y, int u, int v)
 {
@@ -58,10 +59,10 @@ __set_pixel(uint32_t out, uint8_t r, uint8_t g, uint8_t b)
 {
   uint32_t    x, y;
   int         color;
-  int         ndx = (int)(out / 3);
+  int         ndx = (int)(out);
 
   x = ndx % _width;
-  y = ndx % _height;
+  y = ndx / _width;
 
   color = gdImageColorAllocate(_image, r, g, b);
   gdImageSetPixel(_image, x, y, color);
@@ -95,7 +96,7 @@ __yuv422_to_gd_image(uint8_t* yuv)
 		pixel_24[2] = (pixel32 & 0x00ff0000) >> 16;
 
     __set_pixel(out, pixel_24[0], pixel_24[1], pixel_24[2]);
-    out += 3;
+    out++;
 
 		pixel32 = convert_yuv_to_rgb_pixel(y1, u, v);
 		pixel_24[0] = (pixel32 & 0x000000ff);
@@ -103,7 +104,65 @@ __yuv422_to_gd_image(uint8_t* yuv)
 		pixel_24[2] = (pixel32 & 0x00ff0000) >> 16;
 
     __set_pixel(out, pixel_24[0], pixel_24[1], pixel_24[2]);
-    out += 3;
+    out++;
+	}
+}
+#endif
+
+static void
+__set_pixel(int x, int y,  uint8_t r, uint8_t g, uint8_t b)
+{
+  int         color;
+
+  color = gdImageColorAllocate(_image, r, g, b);
+  gdImageSetPixel(_image, x, y, color);
+}
+
+static void
+__yuyv_to_gd_image(uint8_t* yuyv)
+{
+	#define MIN(a, b)		(a < b ? a : b)
+	#define MAX(a, b)		(a > b ? a : b)
+	#define clamp(v)		MIN(255, MAX(0,(v)))
+
+	int nStrideSrc = _width * 2;
+	uint8_t *pSrc = yuyv;
+	uint8_t		r, g, b;
+	int nRow, nCol, nColDst, c, d, e;
+	int x;
+
+	for ( nRow = 0; nRow < _height; ++nRow )
+	{
+		x = 0;
+		for ( nCol = 0, nColDst = 0; nCol < nStrideSrc; nCol +=4, nColDst += 6 )
+		{
+			d = (int)pSrc[nCol + 1] - 128;
+			e = (int)pSrc[nCol + 3] - 128;
+
+			c = 298 * ( ( int )pSrc[ nCol ] - 16 );
+
+			// Blue
+			b = ( uint8_t )clamp( ( c + 516 * d + 128 ) >> 8 );
+			// Green
+			g = ( uint8_t )clamp( ( c - 100 * d - 208 * e + 128 ) >> 8 );
+			// Red
+			r = ( uint8_t )clamp( ( c + 409 * e + 128 ) >> 8 );
+
+			c = 298 * ( ( int )pSrc[ nCol + 2 ] - 16 );
+			__set_pixel(x, nRow, r, g, b);
+			x++;
+
+			// Blue
+			b = ( uint8_t )clamp( ( c + 516 * d + 128 ) >> 8 );
+			// Green
+			g = ( uint8_t )clamp( ( c - 100 * d - 208 * e + 128 ) >> 8 );
+			// Red
+			r = ( uint8_t )clamp( ( c + 409 * e + 128 ) >> 8 );
+
+			__set_pixel(x, nRow, r, g, b);
+			x++;
+		}
+		pSrc += nStrideSrc;
 	}
 }
 
@@ -113,7 +172,7 @@ __create_jpeg_image(int32_t* size)
   uint8_t*  ptr;
   int       s;
 
-  ptr = gdImageJpegPtr(_image, &s, 75);
+  ptr = gdImageJpegPtr(_image, &s, -1);
 
   *size = (int32_t)s;
 
@@ -127,7 +186,8 @@ frame_converter_convert_yuv422(uint8_t* yuv)
   int32_t           size;
   frame_listener_t* l;
 
-  __yuv422_to_gd_image(yuv);
+  //__yuv422_to_gd_image(yuv);
+	__yuyv_to_gd_image(yuv);
 
   // FIXME overlay
 
@@ -167,7 +227,8 @@ frame_converter_init(uint32_t width, uint32_t height)
   _width = width;
   _height = height;
 
-  _image = gdImageCreate(_width, _height);
+  //_image = gdImageCreate(_width, _height);
+  _image = gdImageCreateTrueColor(_width, _height);
 
   for(uint32_t i = 0; i < MAX_FRAME_CONVERTER_BUFFERS; i++)
   {

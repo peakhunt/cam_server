@@ -152,7 +152,7 @@ __webserver_thread(void* arg)
   LOGI(TAG, "starting up web server\n"); 
   mg_mgr_init(&_mongoose_mgr, NULL);
 
-  _server_conn = mg_bind(&_mongoose_mgr, "8000", ev_handler);
+  _server_conn = mg_bind(&_mongoose_mgr, "8080", ev_handler);
   if(_server_conn == NULL)
   {
     LOGE(TAG, "mg_bind failed\n");
