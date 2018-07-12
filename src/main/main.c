@@ -134,7 +134,7 @@ cli_command_fps(cli_intf_t* intf, int argc, const char** argv)
 static void
 cli_command_last_frame_size(cli_intf_t* intf, int argc, const char** argv)
 {
-  static uint32_t _last_frame_size;
+  extern uint32_t _last_frame_size;
 
   cli_printf(intf, "last frame size: %d"CLI_EOL, _last_frame_size);
 }
