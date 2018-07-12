@@ -109,9 +109,9 @@ __handle_overlay(void)
 
 
   time = asctime(&_current_time);
-  sprintf(msg, "H & Petra's Porn Studio %s", time);
+  sprintf(msg, "H & Petra's Studio %s", time);
 
-  err = gdImageStringFT(_image, NULL, color, "/usr/share/fonts/truetype/freefont/FreeMono.ttf", 16.0, 0.0, 30, 50, msg);
+  err = gdImageStringFT(_image, NULL, color, "/usr/share/fonts/truetype/freefont/FreeMono.ttf", 16.0, 0.0, 30, 30, msg);
 
   if(err)
   {
