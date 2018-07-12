@@ -91,7 +91,7 @@ __create_jpeg_image(int32_t* size)
   uint8_t*  ptr;
   int       s;
 
-  ptr = gdImageJpegPtr(_image, &s, 45);
+  ptr = gdImageJpegPtr(_image, &s, 50);
 
   *size = (int32_t)s;
 
@@ -109,9 +109,9 @@ __handle_overlay(void)
 
 
   time = asctime(&_current_time);
-  sprintf(msg, "Petra's Porn Studio %s", time);
+  sprintf(msg, "H & Petra's Porn Studio %s", time);
 
-  err = gdImageStringFT(_image, NULL, color, "/usr/share/fonts/truetype/freefont/FreeMono.ttf", 16.0, 0.0, 50, 50, msg);
+  err = gdImageStringFT(_image, NULL, color, "/usr/share/fonts/truetype/freefont/FreeMono.ttf", 16.0, 0.0, 30, 50, msg);
 
   if(err)
   {
