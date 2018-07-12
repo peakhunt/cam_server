@@ -41,49 +41,49 @@ __set_pixel(int x, int y,  uint8_t r, uint8_t g, uint8_t b)
 static void
 __yuyv_to_gd_image(uint8_t* yuyv)
 {
-	#define MIN(a, b)		(a < b ? a : b)
-	#define MAX(a, b)		(a > b ? a : b)
-	#define clamp(v)		MIN(255, MAX(0,(v)))
+  #define MIN(a, b)   (a < b ? a : b)
+  #define MAX(a, b)   (a > b ? a : b)
+  #define clamp(v)    MIN(255, MAX(0,(v)))
 
-	int nStrideSrc = _width * 2;
-	uint8_t *pSrc = yuyv;
-	uint8_t		r, g, b;
-	int nRow, nCol, nColDst, c, d, e;
-	int x;
+  int nStrideSrc = _width * 2;
+  uint8_t *pSrc = yuyv;
+  uint8_t r, g, b;
+  int nRow, nCol, nColDst, c, d, e;
+  int x;
 
-	for ( nRow = 0; nRow < _height; ++nRow )
-	{
-		x = 0;
-		for ( nCol = 0, nColDst = 0; nCol < nStrideSrc; nCol +=4, nColDst += 6 )
-		{
-			d = (int)pSrc[nCol + 1] - 128;
-			e = (int)pSrc[nCol + 3] - 128;
+  for ( nRow = 0; nRow < _height; ++nRow )
+  {
+    x = 0;
+    for ( nCol = 0, nColDst = 0; nCol < nStrideSrc; nCol +=4, nColDst += 6 )
+    {
+      d = (int)pSrc[nCol + 1] - 128;
+      e = (int)pSrc[nCol + 3] - 128;
 
-			c = 298 * ( ( int )pSrc[ nCol ] - 16 );
+      c = 298 * ( ( int )pSrc[ nCol ] - 16 );
 
-			// Blue
-			b = ( uint8_t )clamp( ( c + 516 * d + 128 ) >> 8 );
-			// Green
-			g = ( uint8_t )clamp( ( c - 100 * d - 208 * e + 128 ) >> 8 );
-			// Red
-			r = ( uint8_t )clamp( ( c + 409 * e + 128 ) >> 8 );
+      // Blue
+      b = ( uint8_t )clamp( ( c + 516 * d + 128 ) >> 8 );
+      // Green
+      g = ( uint8_t )clamp( ( c - 100 * d - 208 * e + 128 ) >> 8 );
+      // Red
+      r = ( uint8_t )clamp( ( c + 409 * e + 128 ) >> 8 );
 
-			c = 298 * ( ( int )pSrc[ nCol + 2 ] - 16 );
-			__set_pixel(x, nRow, r, g, b);
-			x++;
+      c = 298 * ( ( int )pSrc[ nCol + 2 ] - 16 );
+      __set_pixel(x, nRow, r, g, b);
+      x++;
 
-			// Blue
-			b = ( uint8_t )clamp( ( c + 516 * d + 128 ) >> 8 );
-			// Green
-			g = ( uint8_t )clamp( ( c - 100 * d - 208 * e + 128 ) >> 8 );
-			// Red
-			r = ( uint8_t )clamp( ( c + 409 * e + 128 ) >> 8 );
+      // Blue
+      b = ( uint8_t )clamp( ( c + 516 * d + 128 ) >> 8 );
+      // Green
+      g = ( uint8_t )clamp( ( c - 100 * d - 208 * e + 128 ) >> 8 );
+      // Red
+      r = ( uint8_t )clamp( ( c + 409 * e + 128 ) >> 8 );
 
-			__set_pixel(x, nRow, r, g, b);
-			x++;
-		}
-		pSrc += nStrideSrc;
-	}
+      __set_pixel(x, nRow, r, g, b);
+      x++;
+    }
+    pSrc += nStrideSrc;
+  }
 }
 
 static uint8_t*
@@ -127,7 +127,7 @@ frame_converter_convert_yuv422(uint8_t* yuv)
   int32_t           size;
   frame_listener_t* l;
 
-	__yuyv_to_gd_image(yuv);
+  __yuyv_to_gd_image(yuv);
 
   __handle_overlay();
 
