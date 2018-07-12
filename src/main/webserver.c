@@ -3,6 +3,7 @@
 #include "mongoose.h"
 #include "completion.h"
 #include "camera_driver.h"
+#include "frame_converter.h"
 
 #ifdef RPI
 #include <wiringPi.h>
@@ -29,7 +30,7 @@ static struct mg_connection*      _server_conn;
 
 const static char*    TAG = "WEB";
 
-static camera_driver_listener_t   _cam_listener;
+static frame_listener_t   _cam_listener;
 
 static void
 cam_feed_response_begin(struct mg_connection* nc)
@@ -194,7 +195,8 @@ webserver_init(void)
   completion_init(&bootup_complete);
 
   _cam_listener.cb = camera_frame_event;
-  camera_driver_listen(&_cam_listener);
+  // camera_driver_listen(&_cam_listener);
+  frame_converter_listen(&_cam_listener);
 
   pthread_create(&_webserver_thread, NULL, __webserver_thread, &bootup_complete);
 

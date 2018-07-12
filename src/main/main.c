@@ -7,6 +7,7 @@
 #include "io_driver.h"
 #include "webserver.h"
 #include "camera_driver.h"
+#include "frame_converter.h"
 
 #define CONFIG_TELNET_PORT        11050
 
@@ -129,6 +130,7 @@ main(int argc, char** argv)
 {
   camera_driver_init();
 
+  frame_converter_init(640, 480);
   webserver_init();
   io_driver_init(&_io_driver);
   

@@ -28,7 +28,8 @@ v4l2_camera_set_format(v4l2_camera_t* cam)
   format.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
   format.fmt.pix.width = cam->width;
   format.fmt.pix.height = cam->height;
-  format.fmt.pix.pixelformat = V4L2_PIX_FMT_MJPEG;
+  // format.fmt.pix.pixelformat = V4L2_PIX_FMT_MJPEG;
+  format.fmt.pix.pixelformat = V4L2_PIX_FMT_YUYV;
   format.fmt.pix.field = V4L2_FIELD_NONE;
 
   if(ioctl(cam->fd, VIDIOC_S_FMT, &format) == -1){

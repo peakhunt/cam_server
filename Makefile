@@ -24,7 +24,8 @@ APP_SOURCES =                                       \
 src/main/main.c                                     \
 src/main/webserver.c                                \
 src/main/v4l2_camera.c                              \
-src/main/camera_driver.c
+src/main/camera_driver.c                            \
+src/main/frame_converter.c
 
 #######################################
 C_DEFS  = 
@@ -38,9 +39,9 @@ C_INCLUDES =                              \
 -Isrc/mongoose
 
 ifeq ($(RPI),yes)
-LIBS = -ldl -lpthread -lm -lwiringPi
+LIBS = -ldl -lpthread -lm -lwiringPi -lgd -ljpeg
 else
-LIBS = -ldl -lpthread -lm
+LIBS = -ldl -lpthread -lm -lgd -ljpeg
 endif
 LIBDIR = 
 
