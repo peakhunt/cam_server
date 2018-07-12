@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <gd.h>
 
 #include "common_def.h"
@@ -103,10 +104,12 @@ __handle_overlay(void)
   char msg[128];
   int color = gdImageColorAllocate(_image, 255, 255, 255);
   char* err;
-  extern uint32_t _1sec_tick;
+  char* time;
+  extern struct tm _current_time;
 
 
-  sprintf(msg, "Love You Honey! %d", _1sec_tick);
+  time = asctime(&_current_time);
+  sprintf(msg, "Love You Honey! %s", time);
 
   err = gdImageStringFT(_image, NULL, color, "/usr/share/fonts/truetype/freefont/FreeMono.ttf", 16.0, 0.0, 50, 50, msg);
 

@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <sys/timerfd.h>
 #include <sys/types.h>
+#include <time.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
@@ -27,6 +28,8 @@ static int _fps = 0;
 static int _fps_count = 0;
 
 uint32_t    _1sec_tick = 0;
+struct tm   _current_time;
+
 
 static void
 camera_capture_callback(io_driver_watcher_t* watcher, io_driver_event event)
@@ -44,6 +47,15 @@ camera_capture_callback(io_driver_watcher_t* watcher, io_driver_event event)
   }
 }
 
+static inline void
+update_time(void)
+{
+  struct tm* tm;
+
+  tm = localtime(NULL);
+
+  _current_time = *tm;
+}
 static void
 _1sec_elapsed_callback(io_driver_watcher_t* watcher, io_driver_event event)
 {
@@ -58,6 +70,8 @@ _1sec_elapsed_callback(io_driver_watcher_t* watcher, io_driver_event event)
   _fps_count = 0;
   _1sec_tick++;
   // LOGI(TAG, "fps = %d\n", _fps);
+
+  update_time();
 }
 
 static void
@@ -85,6 +99,8 @@ init_timerfd(void)
 
   _timerfd_watcher.fd = _timerfd;
   _timerfd_watcher.callback = _1sec_elapsed_callback;
+
+  update_time();
 }
 
 void
