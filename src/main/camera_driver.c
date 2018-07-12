@@ -51,8 +51,9 @@ static inline void
 update_time(void)
 {
   struct tm* tm;
+  time_t  now = time(NULL);
 
-  tm = localtime(NULL);
+  tm = localtime(&now);
 
   _current_time = *tm;
 }
