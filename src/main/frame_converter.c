@@ -91,7 +91,7 @@ __create_jpeg_image(int32_t* size)
   uint8_t*  ptr;
   int       s;
 
-  ptr = gdImageJpegPtr(_image, &s, -1);
+  ptr = gdImageJpegPtr(_image, &s, 45);
 
   *size = (int32_t)s;
 
@@ -109,7 +109,7 @@ __handle_overlay(void)
 
 
   time = asctime(&_current_time);
-  sprintf(msg, "Love You Honey! %s", time);
+  sprintf(msg, "Petra's Porn Studio %s", time);
 
   err = gdImageStringFT(_image, NULL, color, "/usr/share/fonts/truetype/freefont/FreeMono.ttf", 16.0, 0.0, 50, 50, msg);
 
@@ -138,7 +138,7 @@ frame_converter_convert_yuv422(uint8_t* yuv)
   }
   else
   {
-    LOGI("frame", "converted to jpeg %d bytes\n", size);
+    //LOGI("frame", "converted to jpeg %d bytes\n", size);
   }
 
   memcpy(_buffers[_buffers_ndx].ptr, jpg_img, size);
