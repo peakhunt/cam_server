@@ -30,7 +30,11 @@ static struct mg_connection*      _server_conn;
 
 const static char*    TAG = "WEB";
 
+#ifdef USE_FRAME_CONVERTER
 static frame_listener_t   _cam_listener;
+#else
+static camera_driver_listener_t   _cam_listener;
+#endif
 
 static void
 cam_feed_response_begin(struct mg_connection* nc)
@@ -195,8 +199,11 @@ webserver_init(void)
   completion_init(&bootup_complete);
 
   _cam_listener.cb = camera_frame_event;
-  // camera_driver_listen(&_cam_listener);
+#ifdef USE_FRAME_CONVERTER
   frame_converter_listen(&_cam_listener);
+#else
+  camera_driver_listen(&_cam_listener);
+#endif
 
   pthread_create(&_webserver_thread, NULL, __webserver_thread, &bootup_complete);
 

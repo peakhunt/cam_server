@@ -35,10 +35,18 @@ static void
 camera_capture_callback(io_driver_watcher_t* watcher, io_driver_event event)
 {
   camera_driver_listener_t* l;
+#ifndef USE_FRAME_CONVERTER
+  extern uint32_t _last_frame_size;
+#endif
 
   v4l2_camera_capture(&_cam);
 
   _fps_count++;
+
+
+#ifndef USE_FRAME_CONVERTER
+  _last_frame_size = _cam.head.length;
+#endif
 
   // LOGI(TAG, "capture: length: %d\n", _cam.head.length);
   list_for_each_entry(l, &_listeners, le)
@@ -171,6 +179,10 @@ camera_driver_get_control(camera_control_t c)
   case CAMERA_CONTROL_HFLIP:
     ret = v4l2_camera_get_hflip(&_cam);
     break;
+
+  case CAMERA_CONTROL_JPEG_QUALITY:
+    ret = v4l2_camera_get_jpeg_quality(&_cam);
+    break;
   }
   return ret;
 }
@@ -200,6 +212,10 @@ camera_driver_set_control(camera_control_t c, int v)
 
   case CAMERA_CONTROL_HFLIP:
     ret = v4l2_camera_set_hflip(&_cam, v);
+    break;
+
+  case CAMERA_CONTROL_JPEG_QUALITY:
+    ret = v4l2_camera_set_jpeg_quality(&_cam, v);
     break;
   }
   return ret;

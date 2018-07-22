@@ -28,14 +28,22 @@ v4l2_camera_set_format(v4l2_camera_t* cam)
   format.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
   format.fmt.pix.width = cam->width;
   format.fmt.pix.height = cam->height;
-  // format.fmt.pix.pixelformat = V4L2_PIX_FMT_MJPEG;
+#ifdef USE_FRAME_CONVERTER
+#ifdef RPI
+  format.fmt.pix.pixelformat = V4L2_PIX_FMT_MJPEG;
+#else
   format.fmt.pix.pixelformat = V4L2_PIX_FMT_YUYV;
+#endif
+#else
+  format.fmt.pix.pixelformat = V4L2_PIX_FMT_MJPEG;
+#endif
   format.fmt.pix.field = V4L2_FIELD_NONE;
 
   if(ioctl(cam->fd, VIDIOC_S_FMT, &format) == -1){
     LOGE(TAG, "setting pixel format failed\n");
     return -1;
   }
+
   return 0;
 }
 
@@ -186,7 +194,7 @@ v4l2_camera_open(v4l2_camera_t* cam, const char* device, uint32_t width, uint32_
     return -1;
   }
 
-  v4l2_camera_set_frame_rate(cam, 24);
+  v4l2_camera_set_frame_rate(cam, 12);
   return 0;
 }
 
@@ -448,6 +456,39 @@ v4l2_camera_set_hflip(v4l2_camera_t* cam, int v)
   if(ioctl(cam->fd, VIDIOC_S_CTRL, &control) != 0)
   {
     LOGE(TAG, "v4l2_camera_set_hflip failed\n");
+    return -1;
+  }
+  return 0;
+}
+
+int
+v4l2_camera_get_jpeg_quality(v4l2_camera_t* cam)
+{
+  struct v4l2_ext_control control;
+
+  memset(&control, 0, sizeof(control));
+  control.id = V4L2_CID_JPEG_COMPRESSION_QUALITY ;
+
+  if(ioctl(cam->fd, VIDIOC_G_EXT_CTRLS, &control) != 0)
+  {
+    LOGE(TAG, "v4l2_camera_get_jpeg_quality failed\n");
+    return -1;
+  }
+  return control.value;
+}
+
+int
+v4l2_camera_set_jpeg_quality(v4l2_camera_t* cam, int v)
+{
+  struct v4l2_ext_control control;
+
+  memset(&control, 0, sizeof(control));
+  control.id = V4L2_CID_JPEG_COMPRESSION_QUALITY ;
+  control.value = v;
+
+  if(ioctl(cam->fd, VIDIOC_S_EXT_CTRLS, &control) != 0)
+  {
+    LOGE(TAG, "v4l2_camera_set_jpeg_quality failed\n");
     return -1;
   }
   return 0;

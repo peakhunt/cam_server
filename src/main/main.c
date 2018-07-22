@@ -73,6 +73,7 @@ cli_command_cam_control(cli_intf_t* intf, int argc, const char** argv)
     { "hue", CAMERA_CONTROL_HUE, },
     { "exposure", CAMERA_CONTROL_EXPOSURE, },
     { "hflip", CAMERA_CONTROL_HFLIP, },
+    { "jpg_quality", CAMERA_CONTROL_JPEG_QUALITY, },
   };
   int   v;
   int   get = 0;
@@ -144,7 +145,9 @@ main(int argc, char** argv)
 {
   camera_driver_init();
 
+#ifdef USE_FRAME_CONVERTER
   frame_converter_init(640, 480);
+#endif
   webserver_init();
   io_driver_init(&_io_driver);
   

@@ -92,7 +92,7 @@ __create_jpeg_image(int32_t* size)
   uint8_t*  ptr;
   int       s;
 
-  ptr = gdImageJpegPtr(_image, &s, 50);
+  ptr = gdImageJpegPtr(_image, &s, 60);
 
   *size = (int32_t)s;
 
@@ -142,11 +142,14 @@ frame_converter_convert_yuv422(uint8_t* yuv)
     //LOGI("frame", "converted to jpeg %d bytes\n", size);
   }
 
-  memcpy(_buffers[_buffers_ndx].ptr, jpg_img, size);
+  if(_buffers[_buffers_ndx].ptr != NULL)
+  {
+    gdFree(jpg_img);
+  }
+  _buffers[_buffers_ndx].ptr = jpg_img;
   _buffers[_buffers_ndx].size = size;
   _last_frame_size = size;
 
-  gdFree(jpg_img);
 
   list_for_each_entry(l, &_listeners, le)
   {
@@ -174,7 +177,7 @@ frame_converter_init(uint32_t width, uint32_t height)
   for(uint32_t i = 0; i < MAX_FRAME_CONVERTER_BUFFERS; i++)
   {
     // believe this should be enough for a JPEG image
-    _buffers[i].ptr   = malloc(width * height * sizeof(uint32_t));
+    _buffers[i].ptr   = NULL;
     _buffers[i].size  = 0;
   }
   _buffers_ndx = 0;

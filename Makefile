@@ -20,12 +20,20 @@ src/mongoose/mongoose.c                             \
 src/mongoose/mongoose_util.c                        \
 src/mongoose/frozen.c
 
+MMAL_SOURCES =                                      \
+src/mmal/brcmjpeg.c
+
 APP_SOURCES =                                       \
 src/main/main.c                                     \
 src/main/webserver.c                                \
 src/main/v4l2_camera.c                              \
-src/main/camera_driver.c                            \
-src/main/frame_converter.c
+src/main/camera_driver.c
+
+ifeq ($(RPI),yes)
+APP_SOURCES += src/main/frame_converter_rpi.c
+else
+APP_SOURCES += src/main/frame_converter.c
+endif
 
 #######################################
 C_DEFS  = 
@@ -39,7 +47,11 @@ C_INCLUDES =                              \
 -Isrc/mongoose
 
 ifeq ($(RPI),yes)
-LIBS = -ldl -lpthread -lwiringPi -lgd -ljpeg -lfreetype -lm
+C_INCLUDES += -Isrc/mmal -I/opt/vc/include -I/opt/vc/include/interface/mmal
+endif
+
+ifeq ($(RPI),yes)
+LIBS = -ldl -lpthread -lwiringPi -lgd -ljpeg -lfreetype -lm -L/opt/vc/lib/ -lmmal_core -lmmal_util -lmmal_vc_client -lvcsm -lvcos
 else
 LIBS = -ldl -lpthread -lgd -ljpeg -lfreetype
 endif
@@ -68,9 +80,10 @@ TARGET    = cam_server
 # compile & link flags
 #######################################
 ifeq ($(RPI),yes)
-CFLAGS += -g $(C_DEFS) $(C_INCLUDES) -DRPI
+# CFLAGS += -g $(C_DEFS) $(C_INCLUDES) -DRPI -O3
+CFLAGS += -g $(C_DEFS) $(C_INCLUDES) -DRPI -O3 -DUSE_FRAME_CONVERTER
 else
-CFLAGS += -g $(C_DEFS) $(C_INCLUDES)
+CFLAGS += -g $(C_DEFS) $(C_INCLUDES) -O3
 endif
 
 # Generate dependency information
@@ -87,6 +100,11 @@ all: $(BUILD_DIR)/$(TARGET)
 # target source setup
 #######################################
 TARGET_SOURCES := $(LIB_UTILS_SOURCES) $(MONGOOSE_SOURCES) $(APP_SOURCES)
+
+ifeq ($(RPI),yes)
+TARGET_SOURCES += $(MMAL_SOURCES) src/brcmjpeg_encode.c
+endif
+
 OBJECTS = $(addprefix $(BUILD_DIR)/,$(notdir $(TARGET_SOURCES:.c=.o)))
 vpath %.c $(sort $(dir $(TARGET_SOURCES)))
 
@@ -103,10 +121,6 @@ $(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR)
 $(BUILD_DIR)/$(TARGET): $(OBJECTS) Makefile
 	@echo "[LD]         $@"
 	$Q$(CC) $(OBJECTS) $(LDFLAGS) -o $@
-
-$(BUILD_DIR)/$(TARGET)_rpi: $(OBJECTS) Makefile
-	@echo "[LD]         $@"
-	$Q$(CC) $(OBJECTS) $(LDFLAGS) -lwiringPi -o $@
 
 $(BUILD_DIR):
 	@echo "MKDIR          $(BUILD_DIR)"

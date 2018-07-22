@@ -24,6 +24,7 @@ typedef enum
   CAMERA_CONTROL_HUE,
   CAMERA_CONTROL_EXPOSURE,
   CAMERA_CONTROL_HFLIP,
+  CAMERA_CONTROL_JPEG_QUALITY,
 } camera_control_t;
 
 extern int camera_driver_get_control(camera_control_t c);
