@@ -115,7 +115,7 @@ init_timerfd(void)
 void
 camera_driver_init(void)
 {
-  if(v4l2_camera_open(&_cam, "/dev/video0", 640, 480, 4))
+  if(v4l2_camera_open(&_cam, "/dev/video0", 640, 480, 8))
   {
     LOGE(TAG, "v4l2_camera_open failed\n");
     exit(-1);

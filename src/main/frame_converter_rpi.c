@@ -4,6 +4,8 @@
 #include <string.h>
 #include <time.h>
 #include <gd.h>
+#include <gdfonts.h>
+#include <gdfontl.h>
 
 #include "common_def.h"
 #include "camera_driver.h"
@@ -42,67 +44,17 @@ static struct list_head       _listeners;
 void
 __handle_overlay(void)
 {
-  char msg[128];
+  char msg[256];
   int color = gdTrueColor(255, 255, 255);
-  char* err;
   char* time;
   extern struct tm _current_time;
 
-
   time = asctime(&_current_time);
+  time[strlen(time)-1] = '\0';
   sprintf(msg, "H & Petra's Studio %s", time);
 
-  err = gdImageStringFT(_image, NULL, color, "/usr/share/fonts/truetype/freefont/FreeMono.ttf", 16.0, 0.0, 30, 30, msg);
-
-  if(err)
-  {
-    LOGI("frame", "gdImageStringFT failed: %s\n", err);
-  }
+  gdImageString(_image,   gdFontGetLarge(), 30, 30, (uint8_t*)msg, color);
 }
-
-#if 0
-static inline void
-copy_jpeg_decBuf_to_image(void)
-{
-  uint8_t   r, g, b;
-  int       color;
-
-  for(uint32_t y = 0; y < _height; y++)
-  {
-    for(uint32_t x = 0; x < _width; x++)
-    {
-      r = _jpeg_decBuf[x * 4 + 0 + y * _width * 4];
-      g = _jpeg_decBuf[x * 4 + 1 + y * _width * 4];
-      b = _jpeg_decBuf[x * 4 + 2 + y * _width * 4];
-
-      color = gdTrueColor(r,g,b);
-      gdImageSetPixel(_image, x, y, color);
-    }
-  }
-}
-
-static inline void
-copy_image_to_jpeg_encBuf(void)
-{
-  uint8_t   r, g, b;
-  int       color;
-
-  for(uint32_t y = 0; y < _height; y++)
-  {
-    for(uint32_t x = 0; x < _width; x++)
-    {
-      color = gdImageGetPixel(_image, x, y);
-      r = (color >> 16) & 0xff;
-      g = (color >> 8) & 0xff;
-      b = (color >> 0) & 0xff;
-
-      _jpeg_encBuf[x * 4 + 0 + y * _width * 4] = r;
-      _jpeg_encBuf[x * 4 + 1 + y * _width * 4] = g;
-      _jpeg_encBuf[x * 4 + 2 + y * _width * 4] = b;
-    }
-  }
-}
-#endif
 
 static void
 frame_converter_convert(uint8_t* jpeg, uint32_t len)

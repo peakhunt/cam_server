@@ -194,7 +194,7 @@ v4l2_camera_open(v4l2_camera_t* cam, const char* device, uint32_t width, uint32_
     return -1;
   }
 
-  v4l2_camera_set_frame_rate(cam, 12);
+  v4l2_camera_set_frame_rate(cam, 16);
   return 0;
 }
 
