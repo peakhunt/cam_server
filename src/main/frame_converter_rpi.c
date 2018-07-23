@@ -54,7 +54,7 @@ __handle_overlay(void)
   time = asctime(&_current_time);
 
   time[strlen(time)-1] = '\0';
-  sprintf(msg, "H & Petra's Studio %s. FPS = %d. Size: %.2fK", time,
+  sprintf(msg, "H Studio X-69. %s. FPS = %d. Size: %.2fK", time,
       camera_driver_get_fps(),
       _last_frame_size / 1024.0f);
 
