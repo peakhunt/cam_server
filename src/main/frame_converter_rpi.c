@@ -50,8 +50,9 @@ __handle_overlay(void)
   extern struct tm _current_time;
 
   time = asctime(&_current_time);
+
   time[strlen(time)-1] = '\0';
-  sprintf(msg, "H & Petra's Studio %s", time);
+  sprintf(msg, "H & Petra's Studio %s. FPS = %d", time, camera_driver_get_fps());
 
   gdImageString(_image,   gdFontGetLarge(), 30, 30, (uint8_t*)msg, color);
 }
