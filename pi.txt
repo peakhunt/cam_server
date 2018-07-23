@@ -1,2 +1,5 @@
 be sure to sudo modprobe bcm2835-v4l2
 to create /dev/video0
+
+for hw jpeg encode
+https://github.com/raspberrypi/userland/tree/master/host_applications/linux/apps/hello_pi

@@ -15,3 +15,6 @@ to build property
  on raspberyr PI, to use GPIO LED indication for connection status
 
  make RPI=yes -j4
+
+## architecture
+![Camera Server](cam_server.png "camera server")
