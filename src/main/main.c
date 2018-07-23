@@ -15,7 +15,10 @@ static void cli_command_cam_feed(cli_intf_t* intf, int argc, const char** argv);
 static void cli_command_cam_control(cli_intf_t* intf, int argc, const char** argv);
 static void cli_command_fps(cli_intf_t* intf, int argc, const char** argv);
 static void cli_command_last_frame_size(cli_intf_t* intf, int argc, const char** argv);
+
+#ifdef RPI
 static void cli_command_quality(cli_intf_t* intf, int argc, const char** argv);
+#endif
 
 static io_driver_t      _io_driver;
 static cli_command_t    _app_commands[] =
@@ -40,11 +43,13 @@ static cli_command_t    _app_commands[] =
     "show last frame size",
     cli_command_last_frame_size,
   },
+#ifdef RPI
   {
     "quality",
     "set quality",
     cli_command_quality,
   }
+#endif
 };
 
 io_driver_t*
@@ -146,6 +151,7 @@ cli_command_last_frame_size(cli_intf_t* intf, int argc, const char** argv)
   cli_printf(intf, "last frame size: %d"CLI_EOL, _last_frame_size);
 }
 
+#ifdef RPI
 static void
 cli_command_quality(cli_intf_t* intf, int argc, const char** argv)
 {
@@ -177,6 +183,7 @@ error:
   cli_printf(intf, "quality get"CLI_EOL);
   cli_printf(intf, "quality set <value>"CLI_EOL);
 }
+#endif
 
 int
 main(int argc, char** argv)
