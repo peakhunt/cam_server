@@ -15,6 +15,7 @@ static void cli_command_cam_feed(cli_intf_t* intf, int argc, const char** argv);
 static void cli_command_cam_control(cli_intf_t* intf, int argc, const char** argv);
 static void cli_command_fps(cli_intf_t* intf, int argc, const char** argv);
 static void cli_command_last_frame_size(cli_intf_t* intf, int argc, const char** argv);
+static void cli_command_quality(cli_intf_t* intf, int argc, const char** argv);
 
 static io_driver_t      _io_driver;
 static cli_command_t    _app_commands[] =
@@ -38,6 +39,11 @@ static cli_command_t    _app_commands[] =
     "last_frame_size",
     "show last frame size",
     cli_command_last_frame_size,
+  },
+  {
+    "quality",
+    "set quality",
+    cli_command_quality,
   }
 };
 
@@ -138,6 +144,38 @@ cli_command_last_frame_size(cli_intf_t* intf, int argc, const char** argv)
   extern uint32_t _last_frame_size;
 
   cli_printf(intf, "last frame size: %d"CLI_EOL, _last_frame_size);
+}
+
+static void
+cli_command_quality(cli_intf_t* intf, int argc, const char** argv)
+{
+  extern uint8_t _jpeg_quality;
+
+  if(argc < 2) goto error;
+
+  if(strcmp(argv[1], "get") == 0)
+  {
+    cli_printf(intf, "jpeg quality: %d"CLI_EOL, _jpeg_quality);
+  }
+  else if(strcmp(argv[1], "set") == 0)
+  {
+    if(argc != 3) goto error;
+
+    _jpeg_quality = atoi(argv[2]);
+
+    cli_printf(intf, "set quality to %d"CLI_EOL, _jpeg_quality);
+  }
+  else
+  {
+    goto error;
+  }
+
+  return;
+
+error:
+  cli_printf(intf, "invalid syntax"CLI_EOL);
+  cli_printf(intf, "quality get"CLI_EOL);
+  cli_printf(intf, "quality set <value>"CLI_EOL);
 }
 
 int

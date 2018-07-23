@@ -33,6 +33,8 @@ static uint32_t*    _image_buf;
 static uint32_t**   _tpixels_buf;
 static uint32_t**   _tpixels_org;
 
+uint8_t _jpeg_quality = 12;
+
 static frame_converter_buffer_t   _buffers[MAX_FRAME_CONVERTER_BUFFERS];
 static uint32_t _buffers_ndx = 0;
 uint32_t _last_frame_size = 0;
@@ -52,7 +54,9 @@ __handle_overlay(void)
   time = asctime(&_current_time);
 
   time[strlen(time)-1] = '\0';
-  sprintf(msg, "H & Petra's Studio %s. FPS = %d", time, camera_driver_get_fps());
+  sprintf(msg, "H & Petra's Studio %s. FPS = %d. Size: %.2fK", time,
+      camera_driver_get_fps(),
+      _last_frame_size / 1024.0f);
 
   gdImageString(_image,   gdFontGetLarge(), 30, 30, (uint8_t*)msg, color);
 }

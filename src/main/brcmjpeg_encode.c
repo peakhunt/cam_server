@@ -61,6 +61,7 @@ brcmjpeg_encode(uint8_t* in, uint32_t w, uint32_t h, uint8_t* out, uint32_t* out
 {
   BRCMJPEG_REQUEST_T enc_request;
   BRCMJPEG_STATUS_T status;
+  extern uint8_t _jpeg_quality;
 
   memset(&enc_request, 0, sizeof(enc_request));
 
@@ -68,7 +69,7 @@ brcmjpeg_encode(uint8_t* in, uint32_t w, uint32_t h, uint8_t* out, uint32_t* out
   enc_request.input_handle      = 0;
   enc_request.output            = out;
   enc_request.output_alloc_size = *out_size;
-  enc_request.quality           = 13;
+  enc_request.quality           = _jpeg_quality;
   enc_request.pixel_format      = PIXEL_FORMAT_RGBA;
 
   enc_request.input_size = w * h * 4;
