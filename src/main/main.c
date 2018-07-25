@@ -15,11 +15,13 @@ static void cli_command_cam_feed(cli_intf_t* intf, int argc, const char** argv);
 static void cli_command_cam_control(cli_intf_t* intf, int argc, const char** argv);
 static void cli_command_fps(cli_intf_t* intf, int argc, const char** argv);
 static void cli_command_last_frame_size(cli_intf_t* intf, int argc, const char** argv);
+static void cli_command_msg(cli_intf_t* intf, int argc, const char** argv);
 
 #ifdef RPI
 static void cli_command_quality(cli_intf_t* intf, int argc, const char** argv);
 #endif
 
+char _msg[128] = "Studio H69.";
 static io_driver_t      _io_driver;
 static cli_command_t    _app_commands[] =
 {
@@ -48,8 +50,13 @@ static cli_command_t    _app_commands[] =
     "quality",
     "set quality",
     cli_command_quality,
-  }
+  },
 #endif
+  {
+    "msg",
+    "set message",
+    cli_command_msg,
+  }
 };
 
 io_driver_t*
@@ -184,6 +191,33 @@ error:
   cli_printf(intf, "quality set <value>"CLI_EOL);
 }
 #endif
+
+static void
+cli_command_msg(cli_intf_t* intf, int argc, const char** argv)
+{
+  int ndx = 0;
+
+  if(argc <= 1)
+  {
+    return;
+  }
+
+  _msg[0] = '\0';
+
+  for(int i = 1; i < argc && ndx < (128-1); i++)
+  {
+    if(i != 1)
+    {
+      _msg[ndx++] = ' ';
+    }
+
+    for(int j = 0; j < strlen(argv[i]) && ndx < (128-1); j++)
+    {
+      _msg[ndx++] = argv[i][j];
+    }
+  }
+  _msg[ndx] = '\0';
+}
 
 int
 main(int argc, char** argv)
