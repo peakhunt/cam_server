@@ -9,6 +9,10 @@
 #include "camera_driver.h"
 #include "frame_converter.h"
 
+#ifdef RPI
+#include "am2320.h"
+#endif
+
 #define CONFIG_TELNET_PORT        11050
 
 static void cli_command_cam_feed(cli_intf_t* intf, int argc, const char** argv);
@@ -19,6 +23,7 @@ static void cli_command_msg(cli_intf_t* intf, int argc, const char** argv);
 
 #ifdef RPI
 static void cli_command_quality(cli_intf_t* intf, int argc, const char** argv);
+static void cli_command_temp(cli_intf_t* intf, int argc, const char** argv);
 #endif
 
 char _msg[128] = "Studio H69.";
@@ -50,6 +55,11 @@ static cli_command_t    _app_commands[] =
     "quality",
     "set quality",
     cli_command_quality,
+  },
+  {
+    "temp",
+    "show temperature",
+    cli_command_temp,
   },
 #endif
   {
@@ -190,6 +200,16 @@ error:
   cli_printf(intf, "quality get"CLI_EOL);
   cli_printf(intf, "quality set <value>"CLI_EOL);
 }
+
+static void
+cli_command_temp(cli_intf_t* intf, int argc, const char** argv)
+{
+  float   temp, humi;
+
+  am2320_task_get_data(&temp, &humi);
+
+  cli_printf(intf, "temperature: %.1fC, %.1f%%"CLI_EOL, temp, humi);
+}
 #endif
 
 static void
@@ -223,6 +243,10 @@ int
 main(int argc, char** argv)
 {
   camera_driver_init();
+
+#ifdef RPI
+  am2320_task_init();
+#endif
 
 #ifdef USE_FRAME_CONVERTER
   frame_converter_init(640, 480);

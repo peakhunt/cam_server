@@ -31,6 +31,7 @@ src/main/camera_driver.c
 
 ifeq ($(RPI),yes)
 APP_SOURCES += src/main/frame_converter_rpi.c
+APP_SOURCES += src/main/am2320.c
 else
 APP_SOURCES += src/main/frame_converter.c
 endif

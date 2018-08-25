@@ -12,6 +12,7 @@
 #include "frame_converter.h"
 
 #include "brcmjpeg_encode.h"
+#include "am2320.h"
 
 #define MAX_WIDTH   5000
 #define MAX_HEIGHT  5000
@@ -51,13 +52,17 @@ __handle_overlay(void)
   int color = gdTrueColor(255, 255, 255);
   char* time;
   extern struct tm _current_time;
+  float   temp, humi;
+
+  am2320_task_get_data(&temp, &humi);
 
   time = asctime(&_current_time);
 
   time[strlen(time)-1] = '\0';
-  sprintf(msg, "%s %s. FPS = %d. Size: %.2fK", _msg, time,
+  sprintf(msg, "%s %s. FPS = %d. Size: %.2fK, %.1fC/%.1f%%", _msg, time,
       camera_driver_get_fps(),
-      _last_frame_size / 1024.0f);
+      _last_frame_size / 1024.0f,
+      temp, humi);
 
   gdImageString(_image,   gdFontGetLarge(), 30, 30, (uint8_t*)msg, color);
 }
